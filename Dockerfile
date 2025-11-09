@@ -4,18 +4,17 @@ FROM nginx:latest
 # Set working directory
 WORKDIR /usr/share/nginx/html
 
-# Copy your zip file into a temporary folder
-COPY childrensapp.zip /tmp/childrensapp.zip
+# Copy all files from your repo (including the zip)
+COPY . /usr/share/nginx/html/
 
-# Install unzip, clean default files, unzip your app, and clean up
+# Install unzip, extract childrensapp.zip, and remove it
 RUN apt-get update && \
     apt-get install -y unzip && \
-    rm -rf /usr/share/nginx/html/* && \
-    unzip /tmp/childrensapp.zip -d /usr/share/nginx/html && \
-    rm /tmp/childrensapp.zip && \
+    unzip /usr/share/nginx/html/childrensapp.zip -d /usr/share/nginx/html && \
+    rm /usr/share/nginx/html/childrensapp.zip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Expose nginx port
+# Expose port 80
 EXPOSE 80
 
 # Start nginx
