@@ -1,0 +1,17 @@
+# Use the official Nginx base image
+FROM nginx:latest
+
+# Set a working directory inside the container
+WORKDIR /app
+
+# Copy all files from your local directory to /app
+COPY . /app
+
+# Copy the contents from /app to Nginx's default HTML directory
+RUN cp -r /app/* /usr/share/nginx/html/
+
+# Expose port 80 for HTTP
+EXPOSE 80
+
+# Start Nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]
