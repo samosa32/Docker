@@ -1,17 +1,22 @@
 # Use the official Nginx base image
 FROM nginx:latest
 
-# Set a working directory inside the container
-WORKDIR /app
+# Set working directory
+WORKDIR /usr/share/nginx/html
 
-# Copy all files from your local directory to /app
-COPY . /app
+# Copy zip file into container
+COPY childrensapp.zip /usr/share/nginx/html/
 
-# Copy the contents from /app to Nginx's default HTML directory
-RUN cp -r /app/* /usr/share/nginx/html/
+# Install unzip utility, remove default nginx files, and extract your app
+RUN apt-get update && \
+    apt-get install -y unzip && \
+    rm -rf /usr/share/nginx/html/* && \
+    unzip /usr/share/nginx/html/childrensapp.zip -d /usr/share/nginx/html && \
+    rm /usr/share/nginx/html/childrensapp.zip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Expose port 80 for HTTP
+# Expose port 80
 EXPOSE 80
 
-# Start Nginx in foreground
+# Start nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
